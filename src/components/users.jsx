@@ -13,7 +13,11 @@ const Header = ({ number }) => {
           "человека тусанут",
           "человек тусанет",
         ])} с тобой сегодня`;
-  return <span className={classes}>{text}</span>;
+  return (
+    <h2>
+      <span className={classes}>{text}</span>
+    </h2>
+  );
 };
 const Users = () => {
   const [users, setUsers] = useState(api.users.fetchAll());
@@ -32,35 +36,35 @@ const Users = () => {
   };
 
   const renderUsers = () => {
-    return (
-      users.length !== 0 &&
-      users.map(
-        ({ _id, name, rate, completedMeetings, qualities, profession }) => (
-          <tr key={_id}>
-            <th scope="row">{name}</th>
-            <td>{getQualities(qualities)}</td>
-            <td>{profession.name}</td>
-            <td>{completedMeetings}</td>
-            <td>{rate}/5</td>
-            <td>
-              <button
-                type="button"
-                className="btn btn-danger btn-sm"
-                onClick={() => handleDelete(_id)}
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        )
+    return users.map(
+      ({ _id, name, rate, completedMeetings, qualities, profession }) => (
+        <tr key={_id}>
+          <th scope="row">{name}</th>
+          <td>{getQualities(qualities)}</td>
+          <td>{profession.name}</td>
+          <td>{completedMeetings}</td>
+          <td>{rate}/5</td>
+          <td>
+            <button
+              type="button"
+              className="btn btn-danger btn-sm"
+              onClick={() => handleDelete(_id)}
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
       )
     );
   };
+
+  if (users.length === 0) {
+    return <Header number={users.length} />;
+  }
   return (
     <>
-      <h2>
-        <Header number={users.length} />
-      </h2>
+      <Header number={users.length} />
+
       {users.length !== 0 && (
         <table className="table">
           <thead>
