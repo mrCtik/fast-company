@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import User from "./user";
 import Pagination from "./pagination";
 import { paginate } from "./utils/paginate";
+import PropTypes from "prop-types";
 
 const Users = ({ users, onHandleBookmark, onHandleDelete }) => {
     const count = users.length;
@@ -51,6 +52,12 @@ const Users = ({ users, onHandleBookmark, onHandleDelete }) => {
             />
         </>
     );
+};
+
+Users.propTypes = {
+    users: PropTypes.string.isRequired,
+    onHandleBookmark: PropTypes.func.isRequired,
+    onHandleDelete: PropTypes.func.isRequired
 };
 
 export default Users;
