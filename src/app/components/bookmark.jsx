@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const Bookmark = ({ _id, bookmark, onHandleBookmark }) => (
     <i
@@ -7,4 +8,11 @@ const Bookmark = ({ _id, bookmark, onHandleBookmark }) => (
         onClick={() => onHandleBookmark(_id)}
     />
 );
+
+Bookmark.propTypes = {
+    _id: PropTypes.string.isRequired,
+    onHandleBookmark: PropTypes.func.isRequired,
+    bookmark: PropTypes.bool.isRequired
+};
+
 export default Bookmark;

@@ -11,11 +11,16 @@ module.exports = {
         ecmaVersion: "latest",
         sourceType: "module"
     },
-    plugins: "react",
+    plugins: ["react"],
     rules: {
-        indent: ["error", 4],
+        indent: [
+            "error",
+            4,
+            { ignoredNodes: ["offsetTernaryExpressions: false "] }
+        ],
         semi: [2, "always"],
         "space-before-function-paren": ["error", "never"],
+        "comma-dangle": ["error", "never"],
         quotes: ["error", "double", { allowTemplateLiterals: true }]
     }
 };
