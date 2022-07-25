@@ -3,6 +3,7 @@ import User from "./user";
 import Pagination from "./pagination";
 import { paginate } from "./utils/paginate";
 import PropTypes from "prop-types";
+import GroupList from "./groupList";
 
 const Users = ({ users, onHandleBookmark, onHandleDelete }) => {
     const count = users.length;
@@ -20,6 +21,7 @@ const Users = ({ users, onHandleBookmark, onHandleDelete }) => {
 
     return (
         <>
+            <GroupList />
             <table className="table">
                 <thead>
                     <tr>
