@@ -13,11 +13,7 @@ module.exports = {
     },
     plugins: ["react"],
     rules: {
-        indent: [
-            "error",
-            4,
-            { ignoredNodes: ["offsetTernaryExpressions: false "] }
-        ],
+        indent: ["error", 4],
         semi: [2, "always"],
         "space-before-function-paren": ["error", "never"],
         "comma-dangle": ["error", "never"],
