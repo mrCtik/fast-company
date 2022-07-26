@@ -8,7 +8,8 @@ const Users = ({ users, onHandleBookmark, onHandleDelete }) => {
     const count = users.length;
     const pageSize = 4;
     const [currentPage, setCurrentPage] = useState(1);
-    const handlePageChandge = (pageIndex) => {
+
+    const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
 
@@ -17,6 +18,11 @@ const Users = ({ users, onHandleBookmark, onHandleDelete }) => {
     }
 
     const userCrop = paginate(users, currentPage, pageSize);
+
+    const currentPageBefore = Math.ceil(count / pageSize);
+    if (currentPage > currentPageBefore) {
+        setCurrentPage(currentPageBefore);
+    }
 
     return (
         <>
@@ -48,14 +54,33 @@ const Users = ({ users, onHandleBookmark, onHandleDelete }) => {
                 itemsCount={count}
                 pageSize={pageSize}
                 currentPage={currentPage}
-                onPageChandge={handlePageChandge}
+                onPageChandge={handlePageChange}
             />
         </>
     );
 };
 
 Users.propTypes = {
-    users: PropTypes.string.isRequired,
+    users: PropTypes.arrayOf(
+        PropTypes.shape({
+            bookmark: PropTypes.bool,
+            completedMeetings: PropTypes.number,
+            name: PropTypes.string,
+            profession: PropTypes.shape({
+                id: PropTypes.string,
+                name: PropTypes.string
+            }),
+            qualities: PropTypes.arrayOf(
+                PropTypes.shape({
+                    _id: PropTypes.string,
+                    name: PropTypes.string,
+                    color: PropTypes.string
+                })
+            ),
+            rate: PropTypes.number,
+            _id: PropTypes.string
+        })
+    ).isRequired,
     onHandleBookmark: PropTypes.func.isRequired,
     onHandleDelete: PropTypes.func.isRequired
 };
