@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import API from "./API";
-import SearchStatus from "./components/searchStatus";
 import Users from "./components/users";
 
 const App = () => {
@@ -23,7 +22,6 @@ const App = () => {
     };
     return (
         <>
-            <SearchStatus number={users.length} />
             <Users
                 onHandleDelete={handleDelete}
                 onHandleBookmark={handleBookmark}

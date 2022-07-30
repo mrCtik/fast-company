@@ -13,9 +13,18 @@ module.exports = {
     },
     plugins: ["react"],
     rules: {
-        indent: ["error", 4],
+        indent: [
+            "error",
+            4,
+            {
+                ignoredNodes: ["ArrayExpression"]
+            }
+        ],
         semi: [2, "always"],
-        "space-before-function-paren": ["error", "never"],
+        "space-before-function-paren": [
+            "error",
+            { anonymous: "always", named: "never" }
+        ],
         "comma-dangle": ["error", "never"],
         quotes: ["error", "double", { allowTemplateLiterals: true }]
     }
