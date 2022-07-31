@@ -48,8 +48,19 @@ User.propTypes = {
     name: PropTypes.string.isRequired,
     rate: PropTypes.number.isRequired,
     completedMeetings: PropTypes.number.isRequired,
-    qualities: PropTypes.arrayOf(PropTypes.object).isRequired,
-    profession: PropTypes.objectOf(PropTypes.string).isRequired,
+    // qualities: PropTypes.arrayOf(PropTypes.object).isRequired,
+    qualities: PropTypes.arrayOf(
+        PropTypes.shape({
+            _id: PropTypes.string,
+            color: PropTypes.string,
+            name: PropTypes.string
+        })
+    ).isRequired,
+    // profession: PropTypes.objectOf(PropTypes.string).isRequired,
+    profession: PropTypes.shape({
+        _id: PropTypes.string,
+        name: PropTypes.string
+    }).isRequired,
     onHandleDelete: PropTypes.func.isRequired,
     onHandleBookmark: PropTypes.func.isRequired,
     bookmark: PropTypes.bool.isRequired
