@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import GroupList from "./groupList";
 import API from "../API";
 import SearchStatus from "./searchStatus";
+import _ from "lodash";
 
 const Users = ({ users: allUsers, onHandleBookmark, onHandleDelete }) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -15,9 +16,7 @@ const Users = ({ users: allUsers, onHandleBookmark, onHandleDelete }) => {
     const pageSize = 4;
 
     useEffect(() => {
-        API.professions
-            .fetchAll()
-            .then((data) => setProfessions(Object.assign(data)));
+        API.professions.fetchAll().then((data) => setProfessions(data));
     }, []);
 
     useEffect(() => {
@@ -33,16 +32,27 @@ const Users = ({ users: allUsers, onHandleBookmark, onHandleDelete }) => {
     };
 
     const filteredUsers = selectedProf
-        ? allUsers.filter((user) => user.profession === selectedProf)
+        ? allUsers.filter((user) => {
+            // есть вариант с JSON.stringify(), но он не особо подходит
+            // как я понял, если будет изменен порядок - он выдаст false
+            return _.isEqual(user.profession, selectedProf);
+            //   user.profession === selectedProf;
+        })
         : allUsers;
     const count = filteredUsers.length;
 
     const userCrop = paginate(filteredUsers, currentPage, pageSize);
 
-    if (count === 0) {
-        return null;
-    }
+    useEffect(() => {
+        setCurrentPage(currentPage - 1);
+    }, [Math.ceil(count / pageSize)]);
 
+    // При такой реализации пропадает SearchStatus, если удалить всех юзеров
+    // if (count === 0) {
+    //     return null;
+    // }
+
+    // Преждняя реализация корректировки страницы при удалении юзеров
     // const currentPageBefore = Math.ceil(count / pageSize);
     // if (currentPage > currentPageBefore) {
     //     setCurrentPage(currentPageBefore);
@@ -65,35 +75,37 @@ const Users = ({ users: allUsers, onHandleBookmark, onHandleDelete }) => {
                         className="btn btn-secondary m-2"
                         onClick={clearFilter}
                     >
-                        Очистить
+                        Сбросить фильтр
                     </button>
                 </div>
             )}
             <div className="d-flex flex-column">
                 <SearchStatus number={count} />
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Имя</th>
-                            <th scope="col">Качества</th>
-                            <th scope="col">Профессия</th>
-                            <th scope="col">Встретился, раз</th>
-                            <th scope="col">Оценка</th>
-                            <th scope="col">Избранное</th>
-                            <th scope="col" />
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {userCrop.map((user) => (
-                            <User
-                                key={user._id}
-                                {...user}
-                                onHandleDelete={onHandleDelete}
-                                onHandleBookmark={onHandleBookmark}
-                            />
-                        ))}
-                    </tbody>
-                </table>
+                {count !== 0 && (
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Имя</th>
+                                <th scope="col">Качества</th>
+                                <th scope="col">Профессия</th>
+                                <th scope="col">Встретился, раз</th>
+                                <th scope="col">Оценка</th>
+                                <th scope="col">Избранное</th>
+                                <th scope="col" />
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userCrop.map((user) => (
+                                <User
+                                    key={user._id}
+                                    {...user}
+                                    onHandleDelete={onHandleDelete}
+                                    onHandleBookmark={onHandleBookmark}
+                                />
+                            ))}
+                        </tbody>
+                    </table>
+                )}
                 <div className="d-flex justify-content-center">
                     <Pagination
                         itemsCount={count}
