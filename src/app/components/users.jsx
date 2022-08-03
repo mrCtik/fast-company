@@ -43,8 +43,9 @@ const Users = ({ users: allUsers, onHandleBookmark, onHandleDelete }) => {
 
     const userCrop = paginate(filteredUsers, currentPage, pageSize);
 
+    const currentPageUpdate = (currentPage - 1) ? (currentPage - 1) : currentPage;
     useEffect(() => {
-        setCurrentPage(currentPage - 1);
+        setCurrentPage(currentPageUpdate);
     }, [Math.ceil(count / pageSize)]);
 
     // При такой реализации пропадает SearchStatus, если удалить всех юзеров
