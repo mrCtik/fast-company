@@ -2,6 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const TableHeader = ({ onSort, selectedSort, columns }) => {
+    const getSortArrow = () => {
+        return (
+            <i
+                className={`bi bi-caret-${
+                    selectedSort.order === "asc" ? "up" : "down"
+                }-fill`}
+            ></i>
+        );
+    };
     const handleSort = (item) => {
         if (selectedSort.path === item) {
             onSort({
@@ -19,11 +28,18 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
                     Object.keys(columns).map((column) => (
                         <th
                             key={column}
-                            onClick={() => handleSort(columns[column].path)}
+                            onClick={
+                                columns[column].path
+                                    ? () => handleSort(columns[column].path)
+                                    : null
+                            }
                             scope="col"
-                            role="button"
+                            role={columns[column].path ? "button" : ""}
                         >
                             {columns[column].name}
+                            {columns[column].path &&
+                                columns[column].path === selectedSort.path &&
+                                getSortArrow()}
                         </th>
                     ))}
             </tr>
