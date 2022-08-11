@@ -1,25 +1,37 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "./pagination";
 import { paginate } from "./utils/paginate";
-import PropTypes from "prop-types";
 import GroupList from "./groupList";
 import API from "../API";
 import SearchStatus from "./searchStatus";
 import _ from "lodash";
 import UserTable from "./usersTable";
 
+const pageSize = 4;
+
 const Users = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [professions, setProfessions] = useState();
-    const [selectedProf, setSelectedProf] = useState();
+    const [professions, setProfessions] = useState([]);
+    const [selectedProf, setSelectedProf] = useState(null);
     const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
-    const pageSize = 4;
-
-    const [users, setUsers] = useState();
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        API.users.fetchAll().then((data) => setUsers(data));
+        setLoading(true);
+        Promise.all([
+            API.users.fetchAll().then((data) => setUsers(data)),
+            API.professions.fetchAll().then((data) => setProfessions(data))
+        ]).catch().finally(() => setLoading(false));
     }, []);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [selectedProf]);
+
+    if (loading) {
+        return "Loading...";
+    }
 
     const handleDelete = (userId) => {
         setUsers((prevState) =>
@@ -37,15 +49,7 @@ const Users = () => {
         setUsers(newState);
     };
 
-    useEffect(() => {
-        API.professions.fetchAll().then((data) => setProfessions(data));
-    }, []);
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [selectedProf]);
-
-    const handleProffesionSelect = (item) => {
+    const handleProfessionSelect = (item) => {
         setSelectedProf(item);
     };
 
@@ -57,107 +61,68 @@ const Users = () => {
         setSortBy(item);
     };
 
-    if (users) {
-        const filteredUsers = selectedProf
-            ? users.filter((user) => {
-                  // есть вариант с JSON.stringify(), но он не особо подходит
-                  // как я понял, если будет изменен порядок - он выдаст false
-                  return _.isEqual(user.profession, selectedProf);
-                  //   user.profession === selectedProf;
-              })
-            : users;
-        const count = filteredUsers.length;
+    const filteredUsers = selectedProf
+        ? users.filter((user) => {
+            return _.isEqual(user.profession, selectedProf);
+        })
+        : users;
 
-        const sortedUsers = _.orderBy(
-            filteredUsers,
-            [sortBy.path],
-            [sortBy.order]
-        );
+    const count = filteredUsers.length;
 
-        const userCrop = paginate(sortedUsers, currentPage, pageSize);
+    const sortedUsers = _.orderBy(
+        filteredUsers,
+        [sortBy.path],
+        [sortBy.order]
+    );
 
-        // const currentPageUpdate =
-        //     currentPage - 1 ? currentPage - 1 : currentPage;
-        // useEffect(() => {
-        //     setCurrentPage(currentPageUpdate);
-        // }, [Math.ceil(count / pageSize)]);
+    const userCrop = paginate(sortedUsers, currentPage, pageSize);
 
-        // Преждняя реализация корректировки страницы при удалении юзеров
-        const currentPageBefore = Math.ceil(count / pageSize);
-        if (currentPage > currentPageBefore) {
-            setCurrentPage(currentPageBefore);
-        }
+    const currentPageBefore = Math.ceil(count / pageSize);
+    if (currentPage > currentPageBefore) {
+        setCurrentPage(currentPageBefore);
+    }
 
-        const clearFilter = () => {
-            setSelectedProf();
-        };
+    const clearFilter = () => {
+        setSelectedProf(null);
+    };
 
-        return (
-            <div className="d-flex">
-                {professions && (
-                    <div className="d-flex flex-column flex-shrink-0 p-3">
-                        <GroupList
-                            selectedItem={selectedProf}
-                            items={professions}
-                            onItemSelect={handleProffesionSelect}
-                        />
-                        <button
-                            className="btn btn-secondary m-2"
-                            onClick={clearFilter}
-                        >
-                            Сбросить фильтр
-                        </button>
-                    </div>
+    return (
+        <div className="d-flex">
+            <div className="d-flex flex-column flex-shrink-0 p-3">
+                <GroupList
+                    selectedItem={selectedProf}
+                    items={professions}
+                    onItemSelect={handleProfessionSelect}
+                />
+                <button
+                    className="btn btn-secondary m-2"
+                    onClick={clearFilter}
+                >
+                    Сбросить фильтр
+                </button>
+            </div>
+            <div className="d-flex flex-column">
+                <SearchStatus number={count}/>
+                {count !== 0 && (
+                    <UserTable
+                        users={userCrop}
+                        onSort={handleSort}
+                        selectedSort={sortBy}
+                        onHandleDelete={handleDelete}
+                        onHandleBookmark={handleBookmark}
+                    />
                 )}
-                <div className="d-flex flex-column">
-                    <SearchStatus number={count} />
-                    {count !== 0 && (
-                        <UserTable
-                            users={userCrop}
-                            onSort={handleSort}
-                            selectedSort={sortBy}
-                            onHandleDelete={handleDelete}
-                            onHandleBookmark={handleBookmark}
-                        />
-                    )}
-                    <div className="d-flex justify-content-center">
-                        <Pagination
-                            itemsCount={count}
-                            pageSize={pageSize}
-                            currentPage={currentPage}
-                            onPageChandge={handlePageChange}
-                        />
-                    </div>
+                <div className="d-flex justify-content-center">
+                    <Pagination
+                        itemsCount={count}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChandge={handlePageChange}
+                    />
                 </div>
             </div>
-        );
-    }
-    return "Loading...";
-};
-
-Users.propTypes = {
-    users: PropTypes.arrayOf(
-        PropTypes.shape({
-            _id: PropTypes.string,
-            name: PropTypes.string,
-            bookmark: PropTypes.bool,
-            rate: PropTypes.number,
-            completedMeetings: PropTypes.number,
-            qualities: PropTypes.arrayOf(
-                PropTypes.shape({
-                    _id: PropTypes.string,
-                    color: PropTypes.string,
-                    name: PropTypes.string
-                })
-            ),
-            profession: PropTypes.shape({
-                _id: PropTypes.string,
-                name: PropTypes.string
-            }),
-            onHandleDelete: PropTypes.func,
-            onHandleToggleBookmark: PropTypes.func
-        })
-    )
+        </div>
+    );
 };
 
 export default Users;
