@@ -9,29 +9,31 @@ import UserTable from "./usersTable";
 
 const pageSize = 4;
 
-const Users = () => {
+const UsersList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfessions] = useState([]);
     const [selectedProf, setSelectedProf] = useState(null);
     const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
     const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setLoading(true);
+        // setLoading(true);
         Promise.all([
             API.users.fetchAll().then((data) => setUsers(data)),
             API.professions.fetchAll().then((data) => setProfessions(data))
-        ]).catch().finally(() => setLoading(false));
+        ]).catch();
+        // .finally(() => setLoading(false));
     }, []);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedProf]);
 
-    if (loading) {
-        return "Loading...";
-    }
+    // if (loading) {
+    //     return "Loading...";
+    // }
+    if (!users.length) return "Loading...";
 
     const handleDelete = (userId) => {
         setUsers((prevState) =>
@@ -63,17 +65,13 @@ const Users = () => {
 
     const filteredUsers = selectedProf
         ? users.filter((user) => {
-            return _.isEqual(user.profession, selectedProf);
-        })
+              return _.isEqual(user.profession, selectedProf);
+          })
         : users;
 
     const count = filteredUsers.length;
 
-    const sortedUsers = _.orderBy(
-        filteredUsers,
-        [sortBy.path],
-        [sortBy.order]
-    );
+    const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
 
     const userCrop = paginate(sortedUsers, currentPage, pageSize);
 
@@ -94,15 +92,12 @@ const Users = () => {
                     items={professions}
                     onItemSelect={handleProfessionSelect}
                 />
-                <button
-                    className="btn btn-secondary m-2"
-                    onClick={clearFilter}
-                >
+                <button className="btn btn-secondary m-2" onClick={clearFilter}>
                     Сбросить фильтр
                 </button>
             </div>
             <div className="d-flex flex-column">
-                <SearchStatus number={count}/>
+                <SearchStatus number={count} />
                 {count !== 0 && (
                     <UserTable
                         users={userCrop}
@@ -125,4 +120,4 @@ const Users = () => {
     );
 };
 
-export default Users;
+export default UsersList;
