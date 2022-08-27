@@ -5,7 +5,6 @@ import UsersList from "../usersList";
 
 const Users = () => {
     const { userId } = useParams();
-
     return userId ? <PageOfUser id={userId} /> : <UsersList />;
 };
 
