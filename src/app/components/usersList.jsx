@@ -6,6 +6,7 @@ import API from "../API";
 import SearchStatus from "./searchStatus";
 import _ from "lodash";
 import UserTable from "./usersTable";
+import SerchByName from "./serchByName";
 
 const pageSize = 4;
 
@@ -15,24 +16,26 @@ const UsersList = () => {
     const [selectedProf, setSelectedProf] = useState(null);
     const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
     const [users, setUsers] = useState([]);
-    // const [loading, setLoading] = useState(false);
+    const [searchByText, setSearchByText] = useState("");
 
     useEffect(() => {
-        // setLoading(true);
         Promise.all([
             API.users.fetchAll().then((data) => setUsers(data)),
             API.professions.fetchAll().then((data) => setProfessions(data))
         ]).catch();
-        // .finally(() => setLoading(false));
     }, []);
 
     useEffect(() => {
         setCurrentPage(1);
+        if (searchByText && selectedProf) {
+            setSearchByText("");
+        }
     }, [selectedProf]);
 
-    // if (loading) {
-    //     return "Loading...";
-    // }
+    const handleSearch = (searchText) => {
+        setSearchByText(searchText);
+    };
+
     if (!users.length) return "Loading...";
 
     const handleDelete = (userId) => {
@@ -63,11 +66,14 @@ const UsersList = () => {
         setSortBy(item);
     };
 
-    const filteredUsers = selectedProf
-        ? users.filter((user) => {
-              return _.isEqual(user.profession, selectedProf);
-          })
-        : users;
+    const filteredUsers =
+        (selectedProf &&
+            users.filter((user) => _.isEqual(user.profession, selectedProf))) ||
+        (searchByText &&
+            users.filter(({ name }) =>
+                name.toLowerCase().includes(searchByText.toLowerCase())
+            )) ||
+        users;
 
     const count = filteredUsers.length;
 
@@ -98,6 +104,7 @@ const UsersList = () => {
             </div>
             <div className="d-flex flex-column">
                 <SearchStatus number={count} />
+                <SerchByName onSearchBy={handleSearch} value={searchByText} />
                 {count !== 0 && (
                     <UserTable
                         users={userCrop}
@@ -107,6 +114,7 @@ const UsersList = () => {
                         onHandleBookmark={handleBookmark}
                     />
                 )}
+
                 <div className="d-flex justify-content-center">
                     <Pagination
                         itemsCount={count}
