@@ -4,13 +4,13 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./index.css";
 // import reportWebVitals from "./reportWebVitals";
-import App from "./app/app";
 import { BrowserRouter } from "react-router-dom";
+import App from "./app/app";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <BrowserRouter>
-        <App />
+        <App/>
     </BrowserRouter>
 );
 
