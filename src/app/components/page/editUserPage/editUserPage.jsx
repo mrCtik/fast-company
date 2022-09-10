@@ -6,6 +6,7 @@ import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
 
 const EditUserPage = ({ id }) => {
     const [data, setData] = useState({
@@ -15,10 +16,12 @@ const EditUserPage = ({ id }) => {
         sex: "male",
         qualities: []
     });
+
     const [user, setUser] = useState({});
     const [qualities, setQualities] = useState([]);
     const [professions, setProfession] = useState([]);
     const [errors, setErrors] = useState({});
+    const history = useHistory();
 
     useEffect(() => {
         api.users.getById(id).then((data) => {
@@ -42,14 +45,6 @@ const EditUserPage = ({ id }) => {
     }, []);
 
     const isUserDataExist = Object.keys(user).length;
-    if (isUserDataExist) {
-        console.log("user", user);
-        console.log("Object.keys(user)", Object.keys(user));
-        console.log("user.name", user.name);
-        console.log("user.email", user.email);
-        console.log("user.profession._id", user.profession._id);
-        console.log("user.sex", user.sex);
-    }
 
     useEffect(() => {
         isUserDataExist &&
@@ -58,9 +53,40 @@ const EditUserPage = ({ id }) => {
                 email: user.email,
                 profession: user.profession._id,
                 sex: user.sex,
-                qualities: getQualities(user.qualities, "fromApi")
+                qualities: getQualities(user.qualities, "api")
             });
     }, [user]);
+
+    useEffect(() => {
+        isUserDataExist && validate();
+    }, [data]);
+
+    const validatorConfig = {
+        name: {
+            isRequired: {
+                massage: "Поле имя обязательно для заполнения"
+            }
+        },
+        email: {
+            isRequired: {
+                massage: "Электронная почта обязательная для заполнения"
+            },
+            isEmail: {
+                massage: "Неверный email"
+            }
+        },
+        profession: {
+            isRequired: {
+                massage: "Обязательно выберите свою профессию"
+            }
+        }
+    };
+
+    const validate = () => {
+        const errors = validator(data, validatorConfig);
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
 
     const getProfessionById = (id) => {
         for (const prof of professions) {
@@ -69,21 +95,33 @@ const EditUserPage = ({ id }) => {
             }
         }
     };
-    const getQualities = (elements) => {
-        const qualitiesArray = [];
-        for (const elem of elements) {
-            for (const quality in qualities) {
-                if (elem.value === qualities[quality].value) {
-                    qualitiesArray.push({
-                        _id: qualities[quality].value,
-                        name: qualities[quality].label,
-                        color: qualities[quality].color
-                    });
-                }
-            }
+
+    const getQualities = (elements, key) => {
+        let qualitiesArray = [];
+        switch (key) {
+        case "api": {
+            qualitiesArray = Object.keys(elements).map((optionName) => ({
+                label: elements[optionName].name,
+                value: elements[optionName]._id,
+                color: elements[optionName].color
+            }));
+            break;
+        }
+        case "local": {
+            qualitiesArray = Object.keys(elements).map((optionName) => ({
+                name: elements[optionName].label,
+                _id: elements[optionName].value,
+                color: elements[optionName].color
+            }));
+            break;
+        }
+        default:
+            break;
         }
         return qualitiesArray;
     };
+
+    const isValid = Object.keys(errors).length === 0;
 
     const handleChange = (target) => {
         setData((prevState) => ({
@@ -91,70 +129,27 @@ const EditUserPage = ({ id }) => {
             [target.name]: target.value
         }));
     };
-    const validatorConfig = {
-        email: {
-            isRequired: {
-                message: "Электронная почта обязательна для заполнения"
-            },
-            isEmail: {
-                message: "Email введен некорректно"
-            }
-        },
-        password: {
-            isRequired: {
-                message: "Пароль обязателен для заполнения"
-            },
-            isCapitalSymbol: {
-                message: "Пароль должен содержать хотя бы одну заглавную букву"
-            },
-            isContainDigit: {
-                message: "Пароль должен содержать хотя бы одно число"
-            },
-            min: {
-                message: "Пароль должен состоять минимум из 8 символов",
-                value: 8
-            }
-        },
-        profession: {
-            isRequired: {
-                message: "Обязательно выберите вашу профессию"
-            }
-        },
-        licence: {
-            isRequired: {
-                message:
-                    "Вы не можете использовать наш сервис без подтверждения лицензионного соглашения"
-            }
-        }
-    };
-    useEffect(() => {
-        validate();
-    }, [data]);
-    const validate = () => {
-        const errors = validator(data, validatorConfig);
-        setErrors(errors);
-        return Object.keys(errors).length === 0;
-    };
-    const isValid = Object.keys(errors).length === 0;
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
         const { profession, qualities } = data;
-        console.log({
+        const newUserData = {
             ...data,
             profession: getProfessionById(profession),
-            qualities: getQualities(qualities)
-        });
+            qualities: getQualities(qualities, "local")
+        };
+        api.users.update(id, newUserData).then(history.push(`/users/${id}`));
     };
+
     return (
         <div className="container mt-5">
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
                     <form onSubmit={handleSubmit}>
                         <TextField
-                            label="Имя"
+                            label="Имя Фамилия"
                             name="name"
                             value={data.name}
                             onChange={handleChange}

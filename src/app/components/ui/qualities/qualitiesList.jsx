@@ -13,7 +13,13 @@ const QualitiesList = ({ qualities }) => {
 };
 
 QualitiesList.propTypes = {
-    qualities: PropTypes.array
+    qualities: PropTypes.arrayOf(
+        PropTypes.shape({
+            _id: PropTypes.string,
+            color: PropTypes.string,
+            name: PropTypes.string
+        })
+    ).isRequired
 };
 
 export default QualitiesList;
