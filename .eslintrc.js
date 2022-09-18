@@ -14,13 +14,12 @@ module.exports = {
     plugins: ["react"],
     rules: {
         indent: [
-            "error",
+            0,
             4,
             {
                 ignoredNodes: [
                     "ConditionalExpression BlockStatement",
                     "ConditionalExpression ArrayExpression"
-                    // "ArrayExpression"
                 ]
             }
         ],

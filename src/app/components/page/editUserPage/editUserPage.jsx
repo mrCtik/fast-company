@@ -99,24 +99,24 @@ const EditUserPage = ({ id }) => {
     const getQualities = (elements, key) => {
         let qualitiesArray = [];
         switch (key) {
-        case "api": {
-            qualitiesArray = Object.keys(elements).map((optionName) => ({
-                label: elements[optionName].name,
-                value: elements[optionName]._id,
-                color: elements[optionName].color
-            }));
-            break;
-        }
-        case "local": {
-            qualitiesArray = Object.keys(elements).map((optionName) => ({
-                name: elements[optionName].label,
-                _id: elements[optionName].value,
-                color: elements[optionName].color
-            }));
-            break;
-        }
-        default:
-            break;
+            case "api": {
+                qualitiesArray = Object.keys(elements).map((optionName) => ({
+                    label: elements[optionName].name,
+                    value: elements[optionName]._id,
+                    color: elements[optionName].color
+                }));
+                break;
+            }
+            case "local": {
+                qualitiesArray = Object.keys(elements).map((optionName) => ({
+                    name: elements[optionName].label,
+                    _id: elements[optionName].value,
+                    color: elements[optionName].color
+                }));
+                break;
+            }
+            default:
+                break;
         }
         return qualitiesArray;
     };
