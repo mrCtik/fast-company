@@ -18,33 +18,31 @@ const Login = () => {
         <div className="container mt-5">
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
-                    {formType === "register"
-                        ? (
-                            <>
-                                <h3 className="mb-4">Register</h3>
-                                <RegisterForm />
-                                <p>
+                    {formType === "register" ? (
+                        <>
+                            <h3 className="mb-4">Register</h3>
+                            <RegisterForm />
+                            <p>
                                 Already have account?{" "}
-                                    <a role="button" onClick={toggleFormType}>
-                                        {" "}
+                                <a role="button" onClick={toggleFormType}>
+                                    {" "}
                                     Sign In
-                                    </a>
-                                </p>
-                            </>
-                        )
-                        : (
-                            <>
-                                <h3 className="mb-4">Login</h3>
-                                <LoginForm />
-                                <p>
+                                </a>
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <h3 className="mb-4">Login</h3>
+                            <LoginForm />
+                            <p>
                                 Dont have account?{" "}
-                                    <a role="button" onClick={toggleFormType}>
-                                        {" "}
+                                <a role="button" onClick={toggleFormType}>
+                                    {" "}
                                     Sign Up
-                                    </a>
-                                </p>
-                            </>
-                        )}
+                                </a>
+                            </p>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

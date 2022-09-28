@@ -1,7 +1,6 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
-
+import { useHistory } from "react-router-dom";
 const UserCard = ({ user }) => {
     const history = useHistory();
     const handleClick = () => {
@@ -11,12 +10,12 @@ const UserCard = ({ user }) => {
         <div className="card mb-3">
             <div className="card-body">
                 <button
-                    className="position-absolute top-0 end-0 btn btn-ligth btn-sm"
+                    className="position-absolute top-0 end-0 btn btn-light btn-sm"
                     onClick={handleClick}
                 >
-                    <i className="bi bi-gear"> </i>
+                    <i className="bi bi-gear"></i>
                 </button>
-                <div className="d-flex flex-column align-item-center text-center position-relative">
+                <div className="d-flex flex-column align-items-center text-center position-relative">
                     <img
                         src={`https://avatars.dicebear.com/api/avataaars/${(
                             Math.random() + 1
@@ -27,7 +26,7 @@ const UserCard = ({ user }) => {
                         width="150"
                     />
                     <div className="mt-3">
-                        <h4> {user.name}</h4>
+                        <h4>{user.name}</h4>
                         <p className="text-secondary mb-1">
                             {user.profession.name}
                         </p>
@@ -48,7 +47,6 @@ const UserCard = ({ user }) => {
         </div>
     );
 };
-
 UserCard.propTypes = {
     user: PropTypes.object
 };
