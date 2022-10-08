@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import API from "../../../api";
+import API from "../../../API";
 import SelectField from "../form/selectField";
 import TextAreaField from "../form/textAreaField";
 import { validator } from "../../../utils/validator";
