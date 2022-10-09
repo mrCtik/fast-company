@@ -94,7 +94,7 @@ const RegisterForm = () => {
             ...data,
             qualities: data.qualities.map((q) => q.value)
         };
-        console.log(newData);
+        // console.log(newData);
         try {
             await singUp(newData);
             history.push("/");

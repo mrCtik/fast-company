@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
+import { useAuth } from "../../hooks/useAuth";
+import { useHistory } from "react-router-dom";
 
 const LoginForm = () => {
+    const history = useHistory();
+    const { signIn } = useAuth();
     const [data, setData] = useState({
         email: "",
         password: "",
@@ -51,11 +55,17 @@ const LoginForm = () => {
     };
     const isValid = Object.keys(errors).length === 0;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(data);
+        // console.log(data);
+        try {
+            await signIn(data);
+            history.push("/users");
+        } catch (error) {
+            setErrors(error);
+        }
     };
     return (
         <form onSubmit={handleSubmit}>
@@ -81,6 +91,7 @@ const LoginForm = () => {
             >
                 Оставаться в системе
             </CheckBoxField>
+            {/* {enterError && <p className="text-danger">{enterError}</p>} */}
             <button
                 className="btn btn-primary w-100 mx-auto"
                 type="submit"
