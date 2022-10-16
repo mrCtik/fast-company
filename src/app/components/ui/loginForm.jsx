@@ -59,10 +59,13 @@ const LoginForm = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        // console.log(data);
         try {
             await signIn(data);
-            history.push("/users");
+            history.push(
+                history.location.state.from.pathname
+                    ? history.location.state.from.pathname
+                    : "/"
+            );
         } catch (error) {
             setErrors(error);
         }
@@ -91,7 +94,6 @@ const LoginForm = () => {
             >
                 Оставаться в системе
             </CheckBoxField>
-            {/* {enterError && <p className="text-danger">{enterError}</p>} */}
             <button
                 className="btn btn-primary w-100 mx-auto"
                 type="submit"
