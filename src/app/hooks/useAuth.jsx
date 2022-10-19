@@ -62,6 +62,7 @@ const AuthProvider = ({ children }) => {
             }
         }
     }
+
     async function signIn({ email, password }) {
         try {
             const { data } = await httpAuth.post(
@@ -99,6 +100,7 @@ const AuthProvider = ({ children }) => {
         setUser(null);
         history.push("/");
     }
+
     async function createUser(data) {
         try {
             const { content } = await userService.create(data);
@@ -108,10 +110,21 @@ const AuthProvider = ({ children }) => {
             errorCatcher(error);
         }
     }
+
+    async function updateUser(data) {
+        try {
+            const { content } = await userService.create(data);
+            console.log(content);
+        } catch (error) {
+            errorCatcher(error);
+        }
+    }
+
     function errorCatcher(error) {
         const { message } = error.response.data;
         setError(message);
     }
+
     async function getUserData() {
         try {
             const { content } = await userService.getCurrentUser();
@@ -122,6 +135,7 @@ const AuthProvider = ({ children }) => {
             setLoading(false);
         }
     }
+
     useEffect(() => {
         if (localStorageService.getAccessToken()) {
             getUserData();
@@ -136,8 +150,11 @@ const AuthProvider = ({ children }) => {
             setError(null);
         }
     }, [error]);
+
     return (
-        <AuthContext.Provider value={{ singUp, signIn, currentUser, logOut }}>
+        <AuthContext.Provider
+            value={{ singUp, signIn, currentUser, logOut, updateUser }}
+        >
             {!isLoading ? children : "Loading..."}
         </AuthContext.Provider>
     );
