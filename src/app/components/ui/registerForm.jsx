@@ -22,6 +22,7 @@ const RegisterForm = () => {
         qualities: [],
         licence: false
     });
+
     const { singUp } = useAuth();
     const { qualities } = useQualities();
     const qualitiesList = qualities.map((q) => ({
