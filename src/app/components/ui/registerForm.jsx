@@ -5,11 +5,11 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
-
-import { useQualities } from "../../hooks/useQualities";
-import { useProfessions } from "../../hooks/useProfession";
 import { useAuth } from "../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getQualities } from "../../store/qualities";
+import { getProfessions } from "../../store/professions";
 
 const RegisterForm = () => {
     const history = useHistory();
@@ -22,13 +22,14 @@ const RegisterForm = () => {
         qualities: [],
         licence: false
     });
-    const { singUp } = useAuth();
-    const { qualities } = useQualities();
+    const { signUp } = useAuth();
+    const qualities = useSelector(getQualities());
+    console.log(qualities);
     const qualitiesList = qualities.map((q) => ({
         label: q.name,
         value: q._id
     }));
-    const { professions } = useProfessions();
+    const professions = useSelector(getProfessions());
     const professionsList = professions.map((p) => ({
         label: p.name,
         value: p._id
@@ -53,9 +54,6 @@ const RegisterForm = () => {
         name: {
             isRequired: {
                 message: "Имя обязательно для заполнения"
-            },
-            isname: {
-                message: "Имя введено некорректно"
             },
             min: {
                 message: "Имя должно состоять минимум из 3 символов",
@@ -107,9 +105,9 @@ const RegisterForm = () => {
             ...data,
             qualities: data.qualities.map((q) => q.value)
         };
-        // console.log(newData);
+
         try {
-            await singUp(newData);
+            await signUp(newData);
             history.push("/");
         } catch (error) {
             setErrors(error);
@@ -163,7 +161,7 @@ const RegisterForm = () => {
             <MultiSelectField
                 options={qualitiesList}
                 onChange={handleChange}
-                // defaultValue={data.qualities}
+                defaultValue={data.qualities}
                 name="qualities"
                 label="Выберите ваши качества"
             />
