@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { nanoid } from "nanoid";
-import commentService from "../services/commentService";
+import commentService from "../services/comment.service";
 import { useSelector } from "react-redux";
 import { getCurrentUserId } from "../store/users";
 const CommentsContext = React.createContext();
@@ -38,6 +38,19 @@ export const CommentsProvider = ({ children }) => {
         }
     }
 
+    async function removeComment(id) {
+        try {
+            const { content } = await commentService.removeComment(id);
+            if (content === null) {
+                setComments((prevState) =>
+                    prevState.filter((c) => c._id !== id)
+                );
+            }
+        } catch (error) {
+            errorCatcher(error);
+        }
+    }
+
     async function getComments() {
         try {
             const { content } = await commentService.getComments(userId);
@@ -52,19 +65,6 @@ export const CommentsProvider = ({ children }) => {
     function errorCatcher(error) {
         const { message } = error.response.data;
         setError(message);
-    }
-
-    async function removeComment(id) {
-        try {
-            const { content } = await commentService.removeComment(id);
-            if (content === null) {
-                setComments((prevState) =>
-                    prevState.filter((c) => c._id !== id)
-                );
-            }
-        } catch (error) {
-            errorCatcher(error);
-        }
     }
 
     useEffect(() => {
