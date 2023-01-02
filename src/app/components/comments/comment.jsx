@@ -22,11 +22,9 @@ const Comment = ({
     return (
         <div className="bg-light card-body mb-3">
             <div className="row">
-                {isLoading
-? (
+                {isLoading ? (
                     "Loading ..."
-                )
-: (
+                ) : (
                     <div className="col">
                         <div className="d-flex flex-start">
                             <img
@@ -46,8 +44,8 @@ const Comment = ({
                                         <p className="mb-1">
                                             {user && user.name}
                                             <span className="small">
-                                                {" "} - {" "}
-                                                {displayDate(created)}
+                                                {" "}
+                                                - {displayDate(created)}
                                             </span>
                                         </p>
                                         <button
