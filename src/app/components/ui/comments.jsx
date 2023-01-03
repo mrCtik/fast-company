@@ -8,7 +8,7 @@ import {
     getCommentsLoadingStatus,
     loadCommentsList,
     removeComment
-} from "../../store/сomments";
+} from "../../store/comments";
 import { useParams } from "react-router-dom";
 
 const Comments = () => {
@@ -17,7 +17,6 @@ const Comments = () => {
     useEffect(() => {
         dispatch(loadCommentsList(userId));
     }, [userId]);
-
     const isLoading = useSelector(getCommentsLoadingStatus());
     const comments = useSelector(getComments());
 
@@ -27,9 +26,7 @@ const Comments = () => {
     const handleRemoveComment = (id) => {
         dispatch(removeComment(id));
     };
-
     const sortedComments = orderBy(comments, ["created_at"], ["desc"]);
-
     return (
         <>
             <div className="card mb-2">

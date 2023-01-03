@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { validator } from "../../../utils/validator";
-// import api from "../../../API";
 import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
@@ -16,22 +14,19 @@ import {
     getProfessions,
     getProfessionsLoadingStatus
 } from "../../../store/professions";
-import { getCurrentUserData, updateUsers } from "../../../store/users";
+import { getCurrentUserData, updateUser } from "../../../store/users";
 
 const EditUserPage = () => {
-    const history = useHistory();
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState();
-    // const updateUserData = useSelector(updateUsers());
-    const dispatch = useDispatch();
     const currentUser = useSelector(getCurrentUserData());
+    const dispatch = useDispatch();
     const qualities = useSelector(getQualities());
     const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
     const qualitiesList = qualities.map((q) => ({
         label: q.name,
         value: q._id
     }));
-
     const professions = useSelector(getProfessions());
     const professionLoading = useSelector(getProfessionsLoadingStatus());
     const professionsList = professions.map((p) => ({
@@ -45,15 +40,12 @@ const EditUserPage = () => {
         const isValid = validate();
         if (!isValid) return;
         dispatch(
-            updateUsers({
+            updateUser({
                 ...data,
                 qualities: data.qualities.map((q) => q.value)
             })
         );
-
-        history.push(`/users/${currentUser._id}`);
     };
-
     function getQualitiesListByIds(qualitiesIds) {
         const qualitiesArray = [];
         for (const qualId of qualitiesIds) {

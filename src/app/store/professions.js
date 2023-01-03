@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import professionService from "../services/profession.service";
-import { isOutdated } from "../utils/isOutdated";
+import isOutdated from "../utils/isOutdated";
 
 const professionsSlice = createSlice({
     name: "professions",
@@ -32,7 +32,6 @@ const { professionsRequested, professionsReceived, professionsRequestFailed } =
 
 export const loadProfessionsList = () => async (dispatch, getState) => {
     const { lastFetch } = getState().professions;
-
     if (isOutdated(lastFetch)) {
         dispatch(professionsRequested());
         try {

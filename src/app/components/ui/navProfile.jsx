@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { getCurrentUserData } from "../../store/users";
 
-const NavProfile = () => {
+function NavProfile() {
     const currentUser = useSelector(getCurrentUserData());
     const [isOpen, setOpen] = useState(false);
     const toggleMenu = () => {
@@ -29,11 +29,11 @@ const NavProfile = () => {
                     Profile
                 </Link>
                 <Link to="/logout" className="dropdown-item">
-                    LogOut
+                    Log Out
                 </Link>
             </div>
         </div>
     );
-};
+}
 
 export default NavProfile;

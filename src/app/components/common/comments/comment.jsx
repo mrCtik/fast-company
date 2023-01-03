@@ -1,17 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { displayDate } from "../../../utils/displayDate";
-import { getCurrentUserId, getUserById } from "../../../store/users";
 import { useSelector } from "react-redux";
+import { getCurrentUserId, getUserById } from "../../../store/users";
+
 const Comment = ({
     content,
-    created_ad: created,
+    created_at: created,
     _id: id,
     userId,
     onRemove
 }) => {
-    const user = useSelector(getUserById(userId));
     const currentUserId = useSelector(getCurrentUserId());
+    const user = useSelector(getUserById(userId));
 
     return (
         <div className="bg-light card-body  mb-3">
@@ -54,8 +55,8 @@ const Comment = ({
 };
 Comment.propTypes = {
     content: PropTypes.string,
-    edited_ad: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    created_ad: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    edited_at: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    created_at: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     userId: PropTypes.string,
     onRemove: PropTypes.func,
     _id: PropTypes.string
