@@ -1,4 +1,34 @@
-# Getting Started with Create React App
+
+# Fast Company
+
+Fast Company is a React application that uses the latest technologies to provide an efficient and user-friendly experience. 
+
+## Features 
+* Redux Toolkit for state management 
+* Axios for API calls 
+* Bootstrap for styling 
+* React Router for navigation 
+* React Select for dropdown menus 
+* React Toastify for notifications 
+* Web Vitals for performance tracking 
+* ESLint for linting and formatting code  
+
+ ## Dependencies 
+
+ * @reduxjs/toolkit: ^1.7.1  
+ * @testing-library/jest-dom: ^5.11.4  
+ * @testing-library/react: ^11.1.0  
+ * @testing-library/user-event: ^12.1.10  
+ * axios: ^0.25.0  
+ * bootstrap: ^5.1.0  
+ * bootstrap-icons: ^1.5.0  
+ * eslint-plugin-prettier: ^3.4.1  
+ * history: ^4.9.0  
+ * lodash: ^4.17.15   
+ * nanoid: ^4.0.0   
+ * prop-types: ^15.7.2   														    react: 17^0^2    react-dom 17^0^2    react-redux 7^2^6     react-router-dom 5^3^4     react-scripts 4^0^3     react-select 5^1^0     react-toastify 8^1^0     webvitals 1^0^1    eslint 732 0     eslint config airbnb 182 1     eslint config standard 160 3      eslint plugin import 224 2      eslint plugin jsx a11y 64 1      eslint plugin node 111 0      eslint plugin promise 51 0      eslint plugin react 7251
+ 
+<!-- # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -67,4 +97,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 ### `yarn build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify) -->
